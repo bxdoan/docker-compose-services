@@ -8,7 +8,7 @@ services:
     image: bitnami/mariadb:10.3
     ports:
       - 3306:3306
-    container_name: nn_mariadb
+    container_name: bxd_mariadb
     volumes:
       # ref. https://hub.docker.com/r/bitnami/mariadb/#persisting-your-database
       # - /path/to/mariadb-persistence:/bitnami/mariadb

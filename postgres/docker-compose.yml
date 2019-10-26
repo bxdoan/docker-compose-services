@@ -6,11 +6,17 @@ services:
     image: mdillon/postgis  # postgres image with postgis ready
     ports:
       - "54322:5432"  # note we double the last digit 2 on purpose to create our port - we aim not to overwrite the original port
-    container_name: nn_postgres  # nn aka namgivu shorthand
+    container_name: bxd_postgres
     volumes:
       - v_postgres:/var/lib/postgresql/data
+    networks:
+      - postgres
     restart: always
 
 volumes:
   v_postgres:
     driver: local
+
+networks:
+  postgres:
+    driver: bridge

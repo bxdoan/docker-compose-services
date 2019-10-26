@@ -2,7 +2,7 @@
 
 s=$BASH_SOURCE ; s=$(dirname "$s") ; s=$(cd "$s" && pwd) ; SCRIPT_HOME="$s"  # get SCRIPT_HOME=executed script's path, containing folder, cd & pwd to get container path
 
-CONTAINER_NAME='nn_mariadb'
+CONTAINER_NAME='bxd_mariadb'
 MARIADB_ROOT_PASSWORD='root'
 
 # run the container
