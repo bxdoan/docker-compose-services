@@ -9,6 +9,6 @@ docker-compose -f "$SCRIPT_HOME/docker-compose.yml" up -d --force-recreate  # re
 echo "
 # after container run, we can visit pgAdmin page: localhost:5050/
 
-Username:admin@pgadmin.org
-Password:admin
+Username: admin@pgadmin.org
+Password: admin
 "
