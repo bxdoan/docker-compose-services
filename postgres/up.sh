@@ -8,6 +8,10 @@ POSTGRES_USER='postgres'
 # run the container
 docker-compose -f "$SCRIPT_HOME/docker-compose.yml" up -d --force-recreate  # ref. https://forums.docker.com/t/named-volume-with-postgresql-doesnt-keep-databases-data/7434/2
 
+if [[ $1 == 'gc' ]]; then
+    docker rename ${CONTAINER_NAME} gc_postgres
+    CONTAINER_NAME='gc_postgres'
+fi
 
 # aftermath note
 echo "

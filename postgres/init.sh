@@ -5,6 +5,10 @@ s=$BASH_SOURCE ; s=$(dirname "$s") ; s=$(cd "$s" && pwd) ; SCRIPT_HOME="$s"  # g
 CONTAINER_NAME='bxd_postgres'
 POSTGRES_USER='postgres'
 
+if [[ $1 == 'gc' ]]; then
+    CONTAINER_NAME='gc_postgres'
+fi
+
 # run the container
 docker exec -it $CONTAINER_NAME psql -U $POSTGRES_USER -c "CREATE DATABASE IF NOT EXISTS atlas;"
 docker exec -it $CONTAINER_NAME psql -U $POSTGRES_USER -c "CREATE DATABASE IF NOT EXISTS atlas_test;"
