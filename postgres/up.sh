@@ -2,15 +2,27 @@
 
 s=$BASH_SOURCE ; s=$(dirname "$s") ; s=$(cd "$s" && pwd) ; SCRIPT_HOME="$s"  # get SCRIPT_HOME=executed script's path, containing folder, cd & pwd to get container path
 
-CONTAINER_NAME='bxd_postgres'
+bxd='bxd'
+gc="gc"
+CONTAINER_NAME_POST="_postgres"
 POSTGRES_USER='postgres'
 
 # run the container
 docker-compose -f "$SCRIPT_HOME/docker-compose.yml" up -d --force-recreate  # ref. https://forums.docker.com/t/named-volume-with-postgresql-doesnt-keep-databases-data/7434/2
 
+if [[ $1 == '-h' ]]; then
+    echo "
+# Create db normal with bxd_postgres
+    ./up.sh
+# Create db for gc with gc_postgres
+    ./up.sh gc
+"
+    exit 1
+fi
+
 if [[ $1 == 'gc' ]]; then
-    docker rename ${CONTAINER_NAME} gc_postgres
-    CONTAINER_NAME='gc_postgres'
+    CONTAINER_NAME="${gc}${CONTAINER_NAME_POST}"
+    docker rename "${bxd}${CONTAINER_NAME_POST}" ${CONTAINER_NAME}
 fi
 
 # aftermath note
