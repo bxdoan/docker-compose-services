@@ -1,0 +1,92 @@
+version: '2.0'
+
+services:
+  postgres:
+    image: mdillon/postgis  # postgres image with postgis ready
+    ports:
+      - "54322:5432"  # note we double the last digit 2 on purpose to create our port - we aim not to overwrite the original port
+    container_name: ${GC}postgres${GC_INSTANCE_ID_APPEND}
+    volumes:
+      - v_postgres:/var/lib/postgresql/data
+    restart: always
+#    networks:
+#      - gc_docker_network
+
+  pgadmin:
+    container_name: ${GC}pgadmin_container${GC_INSTANCE_ID_APPEND}
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@pgadmin.org
+      PGADMIN_DEFAULT_PASSWORD: admin
+    volumes:
+      - pgadmin:/var/lib/pgadmin/
+    ports:
+      - "5050:80"
+    restart: always
+    depends_on:
+      - postgres
+#    networks:
+#      - gc_docker_network
+
+  mongo:
+    image: bitnami/mongodb:3.6
+    ports:
+      - "27018:27017"
+    container_name: ${GC}mongo${GC_INSTANCE_ID_APPEND}
+    volumes:
+      - v_mongodb:/var/lib/mongo/data
+    restart: always
+    labels:
+      kompose.service.type: nodeport
+#    networks:
+#      - gc_docker_network
+
+  rabbitmq:
+    image: rabbitmq:3.7.14-management
+    ports:
+      - "5671:5671" # 5671 for ssl
+      - "5672:5672" # 5672 for non-ssl
+      - "15671:15671"
+      - "15672:15672"
+    container_name: ${GC}rabbitmq${GC_INSTANCE_ID_APPEND}
+    volumes:
+      # use :v_rabbitmq as auto generating volume or use a absolute path to map volume
+      - v_rabbitmq:/var/lib/rabbitmq/data
+    restart: always
+    env_file: # uncomment appropriate .env files below to enable ssl
+      - .env-rabbitmq-common
+      # - .env-rabbitmq-ssl
+      # - .env-rabbitmq-management-ssl
+    environment:
+      # You can overwrite config here
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+#    networks:
+#      - gc_docker_network
+
+  redis:
+    image: redis:4.0.5-alpine
+    ports:
+      - "63799:6379"
+    container_name: ${GC}redis${GC_INSTANCE_ID_APPEND}
+    volumes:
+      - v_redis:/var/lib/redis/data
+    restart: always
+#    networks:
+#      - gc_docker_network
+
+volumes:
+  v_postgres:
+    driver: local
+  pgadmin:
+    driver: local
+  v_redis:
+    driver: local
+  v_rabbitmq:
+    driver: local
+  v_mongodb:
+    driver: local
+
+#networks:
+#  gc_docker_network:
+#    name: ${GC}docker_network${GC_INSTANCE_ID_APPEND}
